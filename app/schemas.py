@@ -9,6 +9,7 @@ class BlogCreate(BlogBase):
 
 class Blog(BlogBase):
     id: int
+    image_url: str  # Nuevo campo para la URL de la imagen
 
     class Config:
         orm_mode = True
