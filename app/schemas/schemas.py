@@ -13,3 +13,7 @@ class Blog(BlogBase):
 
     class Config:
         orm_mode = True
+
+class User(BaseModel):
+    username: str
+    password: str

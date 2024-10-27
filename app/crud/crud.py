@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+
+from ..models import models
+from ..schemas import schemas
 
 def get_blogs(db: Session, skip: int = 0, limit: int = 10):
     return db.query(models.Blog).offset(skip).limit(limit).all()
