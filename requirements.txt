@@ -16,3 +16,4 @@ typing_extensions==4.12.2
 uvicorn==0.31.0
 psycopg2-binary==2.9.6 
 python-multipart==0.0.5 
+PyJWT==2.8.0
