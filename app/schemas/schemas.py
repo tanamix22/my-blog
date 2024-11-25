@@ -3,8 +3,12 @@ from pydantic import BaseModel
 class BlogBase(BaseModel):
     title: str
     content: str
+    image_url: str
 
 class BlogCreate(BlogBase):
+    pass
+
+class BlogUpdate(BlogBase):
     pass
 
 class Blog(BlogBase):

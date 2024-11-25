@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from ..crud import crud
+from ..auth.jwt_bearer import JWTBearer
 
 from ..models import models
 from ..schemas import schemas
@@ -21,38 +22,37 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/blogs/", response_model=schemas.Blog)
+@router.post("/blogs/", response_model=schemas.Blog, dependencies=[Depends(JWTBearer())])
 def create_blog(
-    title: str,
-    content: str,
-    image: UploadFile = File(...),
+    blog: schemas.BlogCreate,
     db: Session = Depends(get_db)
 ):
-    # Guardar la imagen en el sistema de archivos
-    image_path = f"images/{image.filename}"
-    with open(image_path, "wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
-
-    # Crear la URL de la imagen
-    image_url = f"/{image_path}"
-
-    # Crear el blog en la base de datos
-    blog_data = schemas.BlogCreate(title=title, content=content)
-    return crud.create_blog(db=db, blog=blog_data, image_url=image_url)
+    return crud.create_blog(db=db, blog=blog)
 
 @router.get("/blogs/", response_model=List[schemas.Blog])
 def read_blogs(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     blogs = crud.get_blogs(db, skip=skip, limit=limit)
     return blogs
 
-@router.get("/blogs/{blog_id}", response_model=schemas.Blog)
+@router.get("/blogs/{blog_id}", response_model=schemas.Blog, dependencies=[Depends(JWTBearer())])
 def read_blog(blog_id: int, db: Session = Depends(get_db)):
     db_blog = crud.get_blog(db, blog_id=blog_id)
     if db_blog is None:
         raise HTTPException(status_code=404, detail="Blog not found")
     return db_blog
 
-@router.delete("/blogs/{blog_id}", response_model=schemas.Blog)
+@router.delete("/blogs/{blog_id}", response_model=schemas.Blog, dependencies=[Depends(JWTBearer())])
 def delete_blog(blog_id: int, db: Session = Depends(get_db)):
     db_blog = crud.delete_blog(db, blog_id=blog_id)
+    return db_blog
+
+@router.put("/blogs/{blog_id}", response_model=schemas.Blog, dependencies=[Depends(JWTBearer())])
+def update_blog(
+    blog_id: int,
+    blog: schemas.BlogUpdate,
+    db: Session = Depends(get_db)
+):
+    db_blog = crud.update_blog(db, blog_id=blog_id, blog=blog)
+    if db_blog is None:
+        raise HTTPException(status_code=404, detail="Blog not found")
     return db_blog

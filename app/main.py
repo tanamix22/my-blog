@@ -2,8 +2,6 @@ from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.auth.jwt_bearer import JWTBearer
-
 from .routers import blog, auth
 from .database import Base, engine
 from .models import models
@@ -35,4 +33,4 @@ app.add_middleware(
 app.mount("/images", StaticFiles(directory="images"), name="images")
 
 app.include_router(auth.router)
-app.include_router(blog.router, dependencies=[Depends(JWTBearer())])
+app.include_router(blog.router)
