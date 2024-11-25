@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.auth.jwt_bearer import JWTBearer
 
@@ -13,6 +14,22 @@ from fastapi.security import HTTPBearer
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Configurar CORS
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:3000",  # Agrega aquí los orígenes permitidos
+    "https://terapias.netlify.app/",  # Agrega aquí tu dominio en producción
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Montar la ruta estática para las imágenes
 app.mount("/images", StaticFiles(directory="images"), name="images")
