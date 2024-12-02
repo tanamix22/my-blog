@@ -18,7 +18,8 @@ origins = [
     "http://localhost",
     "http://localhost:8000",
     "http://localhost:3000",  # Agrega aquí los orígenes permitidos
-    "https://terapias.netlify.app/",  # Agrega aquí tu dominio en producción
+    "https://terapias.netlify.app/",
+    "https://terapias.netlify.app",
 ]
 
 app.add_middleware(
