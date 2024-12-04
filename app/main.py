@@ -2,7 +2,7 @@ from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import blog, auth, homepage
+from .routers import blog, auth, homepage, faq
 from .database import Base, engine
 from .models import models
 
@@ -36,3 +36,4 @@ app.mount("/images", StaticFiles(directory="images"), name="images")
 app.include_router(auth.router)
 app.include_router(blog.router)
 app.include_router(homepage.router)
+app.include_router(faq.router)
